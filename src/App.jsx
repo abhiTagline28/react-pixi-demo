@@ -1,9 +1,10 @@
 import ApplicationAutoStart from "./ApplicationAutoStart";
 import { BunnySprite } from "./BunnySprite";
 import HelloWorldPixi from "./HelloWorldPixi";
-import MakeAnimatedSpriteTextures from "./MakeAnimatedSpriteTextures";
+// import MakeAnimatedSpriteTextures from "./MakeAnimatedSpriteTextures";
 import MyGraphics from "./MyGraphics";
 import MyPixiGraphics from "./MyPixiGraphics";
+import RotateBunny from "./RotateBunny";
 
 const App = () => {
   return (
@@ -21,9 +22,12 @@ const App = () => {
       <br />
       <br />
       <HelloWorldPixi />
+      {/* <br />
+      <br />
+      <MakeAnimatedSpriteTextures /> */}
       <br />
       <br />
-      <MakeAnimatedSpriteTextures />
+      <RotateBunny />
     </>
   );
 };
