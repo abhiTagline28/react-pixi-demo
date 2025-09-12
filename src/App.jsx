@@ -16,6 +16,9 @@ import WebGLShaders from "./WebGLShaders";
 // Game examples
 import SnakeGame from "./SnakeGame";
 import BreakoutGame from "./BreakoutGame";
+import TossCoinGame from "./TossCoinGame";
+import BottomCoinToss from "./BottomCoinToss";
+import HorizontalCoinFlip from "./HorizontalCoinFlip";
 
 const App = () => {
   return (
@@ -33,9 +36,6 @@ const App = () => {
       <br />
       <br />
       <HelloWorldPixi />
-      {/* <br />
-      <br />
-      <MakeAnimatedSpriteTextures /> */}
       <br />
       <br />
       <RotateBunny />
@@ -60,14 +60,22 @@ const App = () => {
       <br />
       <br />
       <WebGLShaders />
-
       {/* Game Examples */}
       <br />
       <br />
       <SnakeGame />
       <br />
       <br />
-      <BreakoutGame />
+      <BreakoutGame /> */}
+      <br />
+      <br />
+      <TossCoinGame />
+      <br />
+      <br />
+      <BottomCoinToss />
+      <br />
+      <br />
+      <HorizontalCoinFlip />
     </>
   );
 };
