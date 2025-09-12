@@ -5,6 +5,7 @@ import HelloWorldPixi from "./HelloWorldPixi";
 import MyGraphics from "./MyGraphics";
 import MyPixiGraphics from "./MyPixiGraphics";
 import RotateBunny from "./RotateBunny";
+import ScaleBunny from "./ScaleBunny";
 
 const App = () => {
   return (
@@ -28,6 +29,9 @@ const App = () => {
       <br />
       <br />
       <RotateBunny />
+      <br />
+      <br />
+      <ScaleBunny />
     </>
   );
 };
