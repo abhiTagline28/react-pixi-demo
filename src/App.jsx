@@ -66,7 +66,7 @@ const App = () => {
       <SnakeGame />
       <br />
       <br />
-      <BreakoutGame /> */}
+      <BreakoutGame />
       <br />
       <br />
       <TossCoinGame />
