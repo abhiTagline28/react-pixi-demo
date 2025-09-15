@@ -20,6 +20,15 @@ import TossCoinGame from "./TossCoinGame";
 import BottomCoinToss from "./BottomCoinToss";
 import HorizontalCoinFlip from "./HorizontalCoinFlip";
 
+// Additional game examples
+import TetrisGame from "./TetrisGame";
+import SpaceInvaders from "./SpaceInvaders";
+import PongGame from "./PongGame";
+import MemoryGame from "./MemoryGame";
+import AsteroidsGame from "./AsteroidsGame";
+import CasinoGame from "./CasinoGame";
+import LoadingAnimations from "./LoadingAnimations";
+
 const App = () => {
   return (
     <>
@@ -60,7 +69,7 @@ const App = () => {
       <br />
       <br />
       <WebGLShaders />
-      {/* Game Examples */}
+
       <br />
       <br />
       <SnakeGame />
@@ -76,6 +85,29 @@ const App = () => {
       <br />
       <br />
       <HorizontalCoinFlip />
+
+      {/* Additional Game Examples */}
+      <br />
+      <br />
+      <TetrisGame />
+      <br />
+      <br />
+      <SpaceInvaders />
+      <br />
+      <br />
+      <PongGame />
+      <br />
+      <br />
+      <MemoryGame />
+      <br />
+      <br />
+      <AsteroidsGame />
+      <br />
+      <br />
+      <CasinoGame />
+      <br />
+      <br />
+      <LoadingAnimations />
     </>
   );
 };
