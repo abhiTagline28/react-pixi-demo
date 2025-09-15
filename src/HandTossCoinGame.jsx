@@ -26,11 +26,32 @@ const HandTossCoinChild = ({
   handTexture,
   hand2Texture,
   showCoin,
+  hand2X,
+  setHand2X,
+  hand2Moving,
+  setHand2Moving,
 }) => {
   const [flipCount, setFlipCount] = useState(0);
-  const [hand2X, setHand2X] = useState(300); // Position of hand22 (300 = covering, 500+ = revealed)
+  // Debug logging
+  useEffect(() => {
+    console.log(`Hand22 state - X: ${hand2X}, Moving: ${hand2Moving}, Flipping: ${isFlipping}`);
+  }, [hand2X, hand2Moving, isFlipping]);
 
   useTick(() => {
+    // Handle hand22 movement to cover coin (only when not flipping)
+    if (hand2Moving && hand2X > 300 && !isFlipping) {
+      setHand2X((prev) => {
+        const newX = prev - 5; // Move left by 5 pixels per frame
+        console.log(`Hand22 moving: ${prev} -> ${newX}`);
+        if (newX <= 300) {
+          setHand2Moving(false); // Stop moving when reached target
+          console.log("Hand22 reached target position");
+          return 300;
+        }
+        return newX;
+      });
+    }
+
     if (isFlipping) {
       setFlipCount((prev) => prev + 1);
 
@@ -155,7 +176,8 @@ const HandTossCoinChild = ({
           setCoinScale(1);
           setCoinY(250);
           setCoinX(300);
-          setHand2X(300); // Reset hand22 to cover coin
+          setHand2X(600); // Reset hand22 to off-screen position
+          setHand2Moving(false); // Reset movement state
         }, 3000);
       }
     }
@@ -182,8 +204,8 @@ const HandTossCoinChild = ({
         height={150}
         anchor={0.5}
       />
-      {/* Show coin only when hand22 is not covering it (hand2X > 350) and showCoin is true */}
-      {showCoin && hand2X > 350 && !result && (
+      {/* Show coin only when hand22 is not covering it (hand2X > 320) and showCoin is true */}
+      {showCoin && hand2X > 320 && !result && (
         <pixiGraphics draw={drawCoin} />
       )}
       {/* Show result coin when flipping is done */}
@@ -223,6 +245,8 @@ const HandTossCoinGame = () => {
   const [handTexture, setHandTexture] = useState(Texture.EMPTY);
   const [hand2Texture, setHand2Texture] = useState(Texture.EMPTY);
   const [showCoin, setShowCoin] = useState(true);
+  const [hand2X, setHand2X] = useState(600); // Position of hand22 (starts off-screen, moves to 300 to cover)
+  const [hand2Moving, setHand2Moving] = useState(false); // Track if hand22 is moving to cover
 
   // Load hand textures
   useEffect(() => {
@@ -244,15 +268,19 @@ const HandTossCoinGame = () => {
     }
   }, [handTexture, hand2Texture]);
 
-  // Hide coin after 3 seconds
+  // Move hand22 to cover coin after 3 seconds
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log("Hiding coin after 3 seconds");
-      setShowCoin(false);
-    }, 3000);
+    // Only start timer if hand22 is off-screen and not moving
+    if (hand2X === 600 && !hand2Moving && !isFlipping) {
+      console.log("Setting timer for hand22 movement after 3 seconds");
+      const timer = setTimeout(() => {
+        console.log("Starting hand22 movement to cover coin after 3 seconds");
+        setHand2Moving(true); // Start the movement animation
+      }, 3000);
 
-    return () => clearTimeout(timer);
-  }, []);
+      return () => clearTimeout(timer);
+    }
+  }, [hand2X, hand2Moving, isFlipping]);
 
   const flipCoin = useCallback(() => {
     if (isFlipping) return; // Prevent multiple flips
@@ -262,6 +290,12 @@ const HandTossCoinGame = () => {
     setIsFlipping(true);
     setResult(null);
   }, [isFlipping]);
+
+  // Test function to manually trigger hand22 movement
+  const testHand22Movement = useCallback(() => {
+    console.log("Manually triggering hand22 movement");
+    setHand2Moving(true);
+  }, []);
 
   const resetGame = useCallback(() => {
     setScore(0);
@@ -274,6 +308,8 @@ const HandTossCoinGame = () => {
     setCoinY(250);
     setCoinX(300);
     setShowCoin(true); // Reset to show coin initially
+    setHand2X(600); // Reset hand22 to off-screen position
+    setHand2Moving(false); // Reset movement state
   }, []);
 
   // Update heads/tails count when result changes
@@ -471,6 +507,22 @@ const HandTossCoinGame = () => {
         >
           Reset
         </button>
+        <button
+          onClick={testHand22Movement}
+          style={{
+            marginLeft: "10px",
+            padding: "8px 15px",
+            backgroundColor: "#ff9800",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "bold",
+          }}
+        >
+          Test Hand22
+        </button>
       </div>
       <Application
         width={600}
@@ -502,6 +554,10 @@ const HandTossCoinGame = () => {
           handTexture={handTexture}
           hand2Texture={hand2Texture}
           showCoin={showCoin}
+          hand2X={hand2X}
+          setHand2X={setHand2X}
+          hand2Moving={hand2Moving}
+          setHand2Moving={setHand2Moving}
         />
       </Application>
     </>
