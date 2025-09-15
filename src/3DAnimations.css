@@ -1,0 +1,244 @@
+/* 3D Animation Styles */
+
+/* Perspective and 3D transforms */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-500 {
+  perspective: 500px;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+}
+
+/* Preserve 3D transforms */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Backface visibility */
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.backface-visible {
+  backface-visibility: visible;
+}
+
+/* Custom 3D animations */
+@keyframes rotate3d {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+  }
+}
+
+@keyframes float3d {
+  0%, 100% {
+    transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotateX(10deg) rotateY(10deg);
+  }
+}
+
+@keyframes pulse3d {
+  0%, 100% {
+    transform: scale(1) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotateX(5deg) rotateY(5deg);
+  }
+}
+
+@keyframes morph3d {
+  0% {
+    border-radius: 20%;
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  25% {
+    border-radius: 50%;
+    transform: rotateX(90deg) rotateY(90deg);
+  }
+  50% {
+    border-radius: 20%;
+    transform: rotateX(180deg) rotateY(180deg);
+  }
+  75% {
+    border-radius: 50%;
+    transform: rotateX(270deg) rotateY(270deg);
+  }
+  100% {
+    border-radius: 20%;
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+/* 3D Card styles */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+}
+
+.card-3d:hover {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+/* 3D Button styles */
+.btn-3d {
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+}
+
+.btn-3d:hover {
+  transform: translateY(-2px) rotateX(5deg);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btn-3d:active {
+  transform: translateY(0px) rotateX(0deg);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 3D Container styles */
+.container-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Glass morphism effect */
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Neon glow effect */
+.neon-glow {
+  box-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 15px currentColor,
+    0 0 20px currentColor;
+}
+
+/* 3D Text effect */
+.text-3d {
+  text-shadow: 
+    1px 1px 0 #000,
+    2px 2px 0 #000,
+    3px 3px 0 #000,
+    4px 4px 0 #000,
+    5px 5px 0 #000;
+}
+
+/* Parallax layers */
+.parallax-layer-1 {
+  transform: translateZ(0px);
+}
+
+.parallax-layer-2 {
+  transform: translateZ(100px);
+}
+
+.parallax-layer-3 {
+  transform: translateZ(200px);
+}
+
+/* 3D Cube faces */
+.cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.cube-face-front {
+  transform: translateZ(50px);
+}
+
+.cube-face-back {
+  transform: translateZ(-50px) rotateY(180deg);
+}
+
+.cube-face-right {
+  transform: rotateY(90deg) translateZ(50px);
+}
+
+.cube-face-left {
+  transform: rotateY(-90deg) translateZ(50px);
+}
+
+.cube-face-top {
+  transform: rotateX(90deg) translateZ(50px);
+}
+
+.cube-face-bottom {
+  transform: rotateX(-90deg) translateZ(50px);
+}
+
+/* Responsive 3D adjustments */
+@media (max-width: 768px) {
+  .perspective-1000 {
+    perspective: 500px;
+  }
+  
+  .perspective-2000 {
+    perspective: 1000px;
+  }
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Smooth transitions */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 3D Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-10px) rotateX(5deg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom scrollbar for 3D elements */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}

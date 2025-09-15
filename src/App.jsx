@@ -28,6 +28,12 @@ import MemoryGame from "./MemoryGame";
 import AsteroidsGame from "./AsteroidsGame";
 import CasinoGame from "./CasinoGame";
 import LoadingAnimations from "./LoadingAnimations";
+import RealisticAnimations from "./RealisticAnimations";
+import MoreRealisticExamples from "./MoreRealisticExamples";
+import FramerTextEffects from "./TextEffects";
+import BunnyCatchGame from "./BunnyCatchGame";
+import BunnyMazeGame from "./BunnyMazeGame";
+import BunnyMemoryGame from "./BunnyMemoryGame";
 
 const App = () => {
   return (
@@ -108,6 +114,24 @@ const App = () => {
       <br />
       <br />
       <LoadingAnimations />
+      <br />
+      <br />
+      <RealisticAnimations />
+      <br />
+      <br />
+      <MoreRealisticExamples />
+      <br />
+      <br />
+      <FramerTextEffects />
+      <br />
+      <br />
+      <BunnyCatchGame />
+      <br />
+      <br />
+      <BunnyMazeGame />
+      <br />
+      <br />
+      <BunnyMemoryGame />
     </>
   );
 };
