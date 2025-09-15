@@ -1,0 +1,729 @@
+import { Container, Graphics, Sprite, Texture, Assets, Text } from "pixi.js";
+import { useEffect, useState, useCallback } from "react";
+import { Application, extend, useTick } from "@pixi/react";
+
+extend({
+  Container,
+  Graphics,
+  Sprite,
+  Text,
+});
+
+const HandTossCoinChild = ({
+  coinRotation,
+  isFlipping,
+  result,
+  setCoinRotation,
+  setCoinScale,
+  setCoinY,
+  setCoinX,
+  setIsFlipping,
+  setResult,
+  setScore,
+  drawCoin,
+  drawBackground,
+  drawResultCoin,
+  handTexture,
+  hand2Texture,
+  hand3Texture,
+  showCoin,
+  hand2X,
+  setHand2X,
+  hand2Moving,
+  setHand2Moving,
+  showHand33,
+  setShowHand33,
+  setCoinResult,
+  setShowResultEnabled,
+  setTryAgainEnabled,
+  showResultEnabled,
+  tryAgainEnabled,
+  coinResult,
+  slowFlipRotation,
+  setSlowFlipRotation,
+  setShowCoin,
+}) => {
+  const [flipCount, setFlipCount] = useState(0);
+  // Debug logging
+  useEffect(() => {
+    console.log(`Hand22 state - X: ${hand2X}, Moving: ${hand2Moving}, Flipping: ${isFlipping}`);
+    console.log(`Button states - Show Result: ${showResultEnabled}, Try Again: ${tryAgainEnabled}, Coin Result: ${coinResult}`);
+  }, [hand2X, hand2Moving, isFlipping, showResultEnabled, tryAgainEnabled, coinResult]);
+
+  useTick(() => {
+    // Horizontal flipping animation with increasing speed as hand22 approaches
+    if (!isFlipping && hand2X > 300 && !result) {
+      // Calculate speed based on hand22 position - faster as it gets closer
+      const distanceFromTarget = hand2X - 300; // Distance from target position (300)
+      const maxDistance = 300; // Maximum distance (600 - 300)
+      const speedMultiplier = 1 + (maxDistance - distanceFromTarget) / maxDistance; // 1 to 3
+      const baseSpeed = 0.15; // Much faster base speed
+      const currentSpeed = baseSpeed * speedMultiplier;
+      
+      setSlowFlipRotation((prev) => prev + currentSpeed);
+    }
+
+    // Handle hand22 movement to cover coin (only when not flipping)
+    if (hand2Moving && hand2X > 300 && !isFlipping) {
+      setHand2X((prev) => {
+        const newX = prev - 5; // Move left by 5 pixels per frame
+        console.log(`Hand22 moving: ${prev} -> ${newX}`);
+        
+        // Set random result and hide coin immediately when hand22 starts moving
+        if (prev === 600 && newX === 595) {
+          const randomResult = Math.random() < 0.5 ? "heads" : "tails";
+          setCoinResult(randomResult);
+          setShowCoin(false); // Hide the coin immediately to prevent seeing result
+          console.log(`Coin result set to: ${randomResult}, coin hidden immediately`);
+        }
+        
+        if (newX <= 300) {
+          setHand2Moving(false); // Stop moving when reached target
+          console.log("Hand22 reached target position");
+          return 300;
+        }
+        return newX;
+      });
+    }
+
+    if (isFlipping) {
+      setFlipCount((prev) => prev + 1);
+
+      // Smooth physics with easing
+      const time = flipCount * 0.016; // 60fps timing
+
+      // Smooth trajectory using easing functions
+      const easeOutQuad = (t) => t * (2 - t);
+      const easeInQuad = (t) => t * t;
+
+      // Phase-based animation with smoother transitions
+      if (flipCount < 20) {
+        // Hand22 moves back to reveal coin
+        const moveProgress = flipCount / 20;
+        const easedProgress = easeOutQuad(moveProgress);
+        
+        setHand2X(() => {
+          const startX = 300; // Original position
+          const endX = 500; // Move to the right
+          return startX + (endX - startX) * easedProgress;
+        });
+        
+        setCoinY(() => 250); // Stay on hand
+        setCoinX(() => 300);
+        setCoinRotation((prev) => prev + 0.1);
+        setCoinScale(() => 1);
+      } else if (flipCount < 30) {
+        // Show hand33 (thumbs-up) for coin flipping
+        setShowHand33(true);
+        setCoinY(() => 250); // Stay on hand
+        setCoinX(() => 300);
+        setCoinRotation((prev) => prev + 0.1);
+        setCoinScale(() => 1);
+      } else if (flipCount < 80) {
+        // Launch phase - coin goes from hand to top
+        const launchProgress = (flipCount - 30) / 50;
+        const easedProgress = easeOutQuad(launchProgress);
+
+        setCoinY(() => {
+          const startY = 250; // Start at hand position
+          const endY = 60; // Go to top
+          return startY + (endY - startY) * easedProgress;
+        });
+
+        setCoinX(() => {
+          const drift = Math.sin(time * 2) * 3;
+          return 300 + drift;
+        });
+
+        setCoinRotation((prev) => prev + 1.2);
+        setCoinScale(() => 1 + Math.sin(time * 15) * 0.15);
+      } else if (flipCount < 120) {
+        // Peak phase - coin hovers at top
+        setCoinY(() => {
+          const hoverY = 60 + Math.sin(time * 5) * 6;
+          return Math.max(hoverY, 55);
+        });
+
+        setCoinX(() => {
+          const drift = Math.sin(time * 2.2) * 2;
+          return 300 + drift;
+        });
+
+        setCoinRotation((prev) => prev + 1.4);
+        setCoinScale(() => 1 + Math.sin(time * 18) * 0.2);
+      } else if (flipCount < 170) {
+        // Fall phase - coin falls back to hand
+        const fallProgress = (flipCount - 120) / 50;
+        const easedProgress = easeInQuad(fallProgress);
+
+        // Switch back to hand11 when coin starts falling
+        if (flipCount === 120) {
+          setShowHand33(false);
+        }
+
+        setCoinY(() => {
+          const startY = 60;
+          const endY = 250; // Back to hand
+          return startY + (endY - startY) * easedProgress;
+        });
+
+        setCoinX(() => {
+          const drift = Math.sin(time * 1.8) * 1.5;
+          return 300 + drift;
+        });
+
+        setCoinRotation((prev) => prev + 1.0);
+        setCoinScale(() => 1 + Math.sin(time * 20) * 0.18);
+      } else if (flipCount < 190) {
+        // Settle phase - coin settles on hand
+        const settleProgress = (flipCount - 170) / 20;
+
+        setCoinY((prev) => {
+          const targetY = 250;
+          const diff = targetY - prev;
+          const bounce = Math.sin(settleProgress * Math.PI) * 12;
+          return prev + diff * 0.25 + bounce * 0.3;
+        });
+
+        setCoinX((prev) => {
+          const targetX = 300;
+          const diff = targetX - prev;
+          return prev + diff * 0.2;
+        });
+
+        setCoinRotation((prev) => prev + 0.4);
+        setCoinScale((prev) => {
+          const targetScale = 1;
+          const diff = targetScale - prev;
+          return prev + diff * 0.15;
+        });
+      }
+
+      // End flip after animation
+      if (flipCount > 190) {
+        setIsFlipping(false);
+        setFlipCount(0);
+
+        // Reset hand22 position
+        setHand2X(300);
+
+        // Determine result based on final rotation
+        const finalRotation = coinRotation % (Math.PI * 2);
+        const flipResult = finalRotation < Math.PI ? "heads" : "tails";
+        console.log("Flip completed, result:", flipResult);
+        
+        setCoinResult(flipResult); // Store result but don't show it yet
+
+        // Enable Show Result button and Try Again button
+        setShowResultEnabled(true);
+        setTryAgainEnabled(true);
+        console.log("Buttons enabled - Show Result:", true, "Try Again:", true);
+
+        // Move hand22 to cover coin immediately after flip
+        setHand2X(300);
+      }
+    }
+  });
+
+  return (
+    <>
+      <pixiGraphics draw={drawBackground} />
+      {/* Show hand11.png (hand with coin) or hand33.png (thumbs-up) */}
+      <pixiSprite
+        texture={showHand33 ? hand3Texture : handTexture}
+        x={300}
+        y={250}
+        width={200}
+        height={150}
+        anchor={0.5}
+      />
+      {/* Show hand22.png (hand without coin) - moves to cover/reveal coin */}
+      <pixiSprite
+        texture={hand2Texture}
+        x={hand2X}
+        y={250}
+        width={200}
+        height={150}
+        anchor={0.5}
+      />
+      {/* Show coin only when hand22 is not covering it (hand2X > 320) and showCoin is true and no result is showing */}
+      {showCoin && hand2X > 320 && !result && (
+        <pixiGraphics draw={drawCoin} />
+      )}
+      {/* Show result coin when flipping is done */}
+      {result && (
+        <>
+          <pixiGraphics draw={(graphics) => drawResultCoin(graphics, result)} />
+          <pixiText
+            text={result.toUpperCase()}
+            x={300}
+            y={320}
+            anchor={0.5}
+            style={{
+              fontSize: 24,
+              fill: 0xffffff,
+              stroke: 0x000000,
+              strokeThickness: 3,
+              fontWeight: "bold",
+            }}
+          />
+        </>
+      )}
+    </>
+  );
+};
+
+const AdvancedHandTossCoinGame = () => {
+  const [gameState, setGameState] = useState("menu");
+  const [coinRotation, setCoinRotation] = useState(0);
+  const [coinScale, setCoinScale] = useState(1);
+  const [coinY, setCoinY] = useState(250); // Start at hand position
+  const [coinX, setCoinX] = useState(300);
+  const [isFlipping, setIsFlipping] = useState(false);
+  const [result, setResult] = useState(null);
+  const [score, setScore] = useState(0);
+  const [headsCount, setHeadsCount] = useState(0);
+  const [tailsCount, setTailsCount] = useState(0);
+  const [handTexture, setHandTexture] = useState(Texture.EMPTY);
+  const [hand2Texture, setHand2Texture] = useState(Texture.EMPTY);
+  const [hand3Texture, setHand3Texture] = useState(Texture.EMPTY);
+  const [showCoin, setShowCoin] = useState(true);
+  const [hand2X, setHand2X] = useState(600); // Position of hand22 (starts off-screen, moves to 300 to cover)
+  const [hand2Moving, setHand2Moving] = useState(false); // Track if hand22 is moving to cover
+  const [showHand33, setShowHand33] = useState(false); // Track if hand33 (thumbs-up) is visible
+  const [showResultEnabled, setShowResultEnabled] = useState(false); // Show Result button state
+  const [tryAgainEnabled, setTryAgainEnabled] = useState(false); // Try Again button state
+  const [coinResult, setCoinResult] = useState(null); // Store the flip result
+  const [slowFlipRotation, setSlowFlipRotation] = useState(0); // For slow horizontal flipping
+
+  // Load hand textures
+  useEffect(() => {
+    if (handTexture === Texture.EMPTY) {
+      Assets.load("/hand11.png").then((result) => {
+        console.log("Hand11.png loaded successfully");
+        setHandTexture(result);
+      }).catch((error) => {
+        console.error("Failed to load hand11 image:", error);
+      });
+    }
+    if (hand2Texture === Texture.EMPTY) {
+      Assets.load("/hand22.png").then((result) => {
+        console.log("Hand22.png loaded successfully");
+        setHand2Texture(result);
+      }).catch((error) => {
+        console.error("Failed to load hand22 image:", error);
+      });
+    }
+    if (hand3Texture === Texture.EMPTY) {
+      Assets.load("/hand33.png").then((result) => {
+        console.log("Hand33.png loaded successfully");
+        setHand3Texture(result);
+      }).catch((error) => {
+        console.error("Failed to load hand33 image:", error);
+      });
+    }
+  }, [handTexture, hand2Texture, hand3Texture]);
+
+  // Move hand22 to cover coin after 3 seconds
+  useEffect(() => {
+    // Only start timer if hand22 is off-screen and not moving
+    if (hand2X === 600 && !hand2Moving && !isFlipping) {
+      console.log("Setting timer for hand22 movement after 3 seconds");
+      const timer = setTimeout(() => {
+        console.log("Starting hand22 movement to cover coin after 3 seconds");
+        setHand2Moving(true); // Start the movement animation
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [hand2X, hand2Moving, isFlipping]);
+
+  const flipCoin = useCallback(() => {
+    if (isFlipping) return; // Prevent multiple flips
+
+    // Show coin and start flipping
+    setShowCoin(true);
+    setIsFlipping(true);
+    setResult(null);
+  }, [isFlipping]);
+
+  // Test function to manually trigger hand22 movement
+  const testHand22Movement = useCallback(() => {
+    console.log("Manually triggering hand22 movement");
+    setHand2Moving(true);
+  }, []);
+
+  // Show Result button function
+  const showResult = useCallback(() => {
+    if (!showResultEnabled || !coinResult) return;
+    
+    console.log("Show Result clicked, revealing coin with result:", coinResult);
+    
+    // Move hand22 back to reveal coin and show result
+    setHand2X(500);
+    setResult(coinResult);
+    setShowCoin(true); // Show the coin with result
+    
+    // Update score
+    setScore((prev) => prev + 1);
+    
+    // Disable Show Result button
+    setShowResultEnabled(false);
+    
+    // Keep result visible until Try Again is clicked
+    // No automatic timeout - result stays visible
+  }, [showResultEnabled, coinResult]);
+
+  // Try Again button function
+  const tryAgain = useCallback(() => {
+    if (!tryAgainEnabled) return;
+    
+    console.log("Try Again clicked, resetting for new flip");
+    
+    // Reset everything for a new flip
+    setResult(null);
+    setCoinRotation(0);
+    setCoinScale(1);
+    setCoinY(250);
+    setCoinX(300);
+    setCoinResult(null); // Clear stored result
+    setShowResultEnabled(false); // Disable Show Result button
+    setTryAgainEnabled(false); // Disable Try Again button
+    setShowHand33(false); // Reset hand33 visibility
+    setSlowFlipRotation(0); // Reset slow flip rotation
+    
+    // Move hand22 to off-screen position
+    setHand2X(600);
+    setHand2Moving(false); // Reset movement state
+    
+    // Start hand22 movement to cover coin after 1 second
+    setTimeout(() => {
+      setHand2Moving(true);
+    }, 1000);
+  }, [tryAgainEnabled]);
+
+  const resetGame = useCallback(() => {
+    setScore(0);
+    setHeadsCount(0);
+    setTailsCount(0);
+    setResult(null);
+    setIsFlipping(false);
+    setCoinRotation(0);
+    setCoinScale(1);
+    setCoinY(250);
+    setCoinX(300);
+    setShowCoin(true); // Reset to show coin initially
+    setHand2X(600); // Reset hand22 to off-screen position
+    setHand2Moving(false); // Reset movement state
+    setShowHand33(false); // Reset hand33 visibility
+    setShowResultEnabled(false); // Reset Show Result button
+    setTryAgainEnabled(false); // Reset Try Again button
+    setCoinResult(null); // Clear stored result
+    setSlowFlipRotation(0); // Reset slow flip rotation
+  }, []);
+
+  // Update heads/tails count when result changes
+  useEffect(() => {
+    if (result === "heads") {
+      setHeadsCount((prev) => prev + 1);
+    } else if (result === "tails") {
+      setTailsCount((prev) => prev + 1);
+    }
+  }, [result]);
+
+
+  const drawBackground = useCallback((graphics) => {
+    graphics.clear();
+    graphics.setFillStyle({ color: 0x1a1a2e });
+    graphics.rect(0, 0, 600, 400);
+    graphics.fill();
+
+    // Draw decorative border
+    graphics.setStrokeStyle({ color: 0x3a3a5e, width: 4 });
+    graphics.rect(10, 10, 580, 380);
+    graphics.stroke();
+  }, []);
+
+
+  const drawCoin = useCallback(
+    (graphics) => {
+      graphics.clear();
+
+      // Use slowFlipRotation when coin is visible (hand22 off-screen), otherwise use coinRotation
+      const currentRotation = hand2X === 600 ? slowFlipRotation : coinRotation;
+      
+      // Calculate 3D perspective based on rotation
+      const perspective = Math.abs(Math.sin(currentRotation));
+      const coinRadius = 35 * coinScale;
+      const ellipseHeight = coinRadius * (1 - perspective * 0.7);
+
+      // Draw coin shadow with perspective
+      graphics.setFillStyle({
+        color: 0x000000,
+        alpha: 0.3 + perspective * 0.2,
+      });
+      graphics.ellipse(
+        coinX + 2,
+        coinY + 5,
+        coinRadius * 0.8,
+        ellipseHeight * 0.6
+      );
+      graphics.fill();
+
+      // Draw coin edge (3D effect)
+      graphics.setFillStyle({ color: 0xffb000 });
+      graphics.ellipse(coinX, coinY, coinRadius, ellipseHeight);
+      graphics.fill();
+
+      // Draw coin face with gradient effect
+      const gradient = perspective < 0.3 ? 0xffd700 : 0xffed4e;
+      graphics.setFillStyle({ color: gradient });
+      graphics.ellipse(coinX, coinY, coinRadius * 0.9, ellipseHeight * 0.9);
+      graphics.fill();
+
+      // Draw coin face based on rotation with perspective
+      const face = Math.floor(currentRotation / Math.PI) % 2;
+      graphics.setFillStyle({ color: 0x000000 });
+
+      if (face === 0) {
+        // Heads - draw a crown with perspective
+        graphics.setStrokeStyle({ color: 0x000000, width: 2 + perspective });
+        const crownScale = 1 - perspective * 0.5;
+        graphics.moveTo(coinX, coinY - 12 * crownScale);
+        graphics.lineTo(coinX - 8 * crownScale, coinY - 4 * crownScale);
+        graphics.lineTo(coinX - 12 * crownScale, coinY + 4 * crownScale);
+        graphics.lineTo(coinX - 4 * crownScale, coinY);
+        graphics.lineTo(coinX + 4 * crownScale, coinY);
+        graphics.lineTo(coinX + 12 * crownScale, coinY + 4 * crownScale);
+        graphics.lineTo(coinX + 8 * crownScale, coinY - 4 * crownScale);
+        graphics.lineTo(coinX, coinY - 12 * crownScale);
+        graphics.stroke();
+      } else {
+        // Tails - draw a "T" with perspective
+        graphics.setStrokeStyle({ color: 0x000000, width: 2 + perspective });
+        const tScale = 1 - perspective * 0.5;
+        graphics.moveTo(coinX, coinY - 12 * tScale);
+        graphics.lineTo(coinX, coinY + 12 * tScale);
+        graphics.moveTo(coinX - 12 * tScale, coinY);
+        graphics.lineTo(coinX + 12 * tScale, coinY);
+        graphics.stroke();
+      }
+
+      // Add highlight for 3D effect
+      if (perspective < 0.5) {
+        graphics.setFillStyle({ color: 0xffffff, alpha: 0.4 });
+        graphics.ellipse(
+          coinX - 8,
+          coinY - 8,
+          coinRadius * 0.3,
+          ellipseHeight * 0.3
+        );
+        graphics.fill();
+      }
+    },
+    [coinRotation, coinScale, coinY, coinX, slowFlipRotation, hand2X]
+  );
+
+  const drawResultCoin = useCallback((graphics, coinResult) => {
+    graphics.clear();
+
+    const coinX = 300;
+    const coinY = 250; // Show result on hand
+    const coinRadius = 30;
+
+    // Draw coin shadow
+    graphics.setFillStyle({ color: 0x000000, alpha: 0.4 });
+    graphics.circle(coinX + 2, coinY + 3, coinRadius * 0.9);
+    graphics.fill();
+
+    // Draw coin edge
+    graphics.setFillStyle({ color: 0xffb000 });
+    graphics.circle(coinX, coinY, coinRadius);
+    graphics.fill();
+
+    // Draw coin face
+    graphics.setFillStyle({ color: 0xffd700 });
+    graphics.circle(coinX, coinY, coinRadius * 0.9);
+    graphics.fill();
+
+    // Draw coin face based on result
+    graphics.setFillStyle({ color: 0x000000 });
+    graphics.setStrokeStyle({ color: 0x000000, width: 3 });
+
+    if (coinResult === "heads") {
+      // Draw crown symbol for heads
+      graphics.moveTo(coinX, coinY - 10);
+      graphics.lineTo(coinX - 6, coinY - 3);
+      graphics.lineTo(coinX - 10, coinY + 3);
+      graphics.lineTo(coinX - 3, coinY + 1);
+      graphics.lineTo(coinX + 3, coinY + 1);
+      graphics.lineTo(coinX + 10, coinY + 3);
+      graphics.lineTo(coinX + 6, coinY - 3);
+      graphics.lineTo(coinX, coinY - 10);
+      graphics.stroke();
+    } else {
+      // Draw "T" symbol for tails
+      graphics.moveTo(coinX, coinY - 10);
+      graphics.lineTo(coinX, coinY + 10);
+      graphics.moveTo(coinX - 10, coinY);
+      graphics.lineTo(coinX + 10, coinY);
+      graphics.stroke();
+    }
+
+    // Add highlight
+    graphics.setFillStyle({ color: 0xffffff, alpha: 0.5 });
+    graphics.circle(coinX - 6, coinY - 6, coinRadius * 0.3);
+    graphics.fill();
+  }, []);
+
+  return (
+    <>
+      <h1>Advanced Hand Toss Coin Game</h1>
+      <div style={{ marginBottom: "10px" }}>
+        <span>Total Flips: {score}</span>
+        <span style={{ marginLeft: "20px" }}>Heads: {headsCount}</span>
+        <span style={{ marginLeft: "20px" }}>Tails: {tailsCount}</span>
+        <span style={{ marginLeft: "20px" }}>
+          {!isFlipping && !result && "Click the coin to flip!"}
+          {isFlipping && "Flipping..."}
+          {result && `Result: ${result.toUpperCase()}!`}
+        </span>
+        <button
+          onClick={flipCoin}
+          disabled={isFlipping}
+          style={{
+            marginLeft: "20px",
+            padding: "8px 15px",
+            backgroundColor: isFlipping ? "#ccc" : "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: isFlipping ? "not-allowed" : "pointer",
+            fontSize: "14px",
+            fontWeight: "bold",
+          }}
+        >
+          {isFlipping ? "Flipping..." : "Flip Coin"}
+        </button>
+        <button
+          onClick={resetGame}
+          style={{
+            marginLeft: "10px",
+            padding: "8px 15px",
+            backgroundColor: "#f44336",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "bold",
+          }}
+        >
+          Reset
+        </button>
+        <button
+          onClick={testHand22Movement}
+          style={{
+            marginLeft: "10px",
+            padding: "8px 15px",
+            backgroundColor: "#ff9800",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "bold",
+          }}
+        >
+          Test Hand22
+        </button>
+        <button
+          onClick={showResult}
+          disabled={!showResultEnabled}
+          style={{
+            marginLeft: "10px",
+            padding: "8px 15px",
+            backgroundColor: showResultEnabled ? "#2196f3" : "#cccccc",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: showResultEnabled ? "pointer" : "not-allowed",
+            fontSize: "14px",
+            fontWeight: "bold",
+            opacity: showResultEnabled ? 1 : 0.6,
+          }}
+        >
+          Show Result
+        </button>
+        <button
+          onClick={tryAgain}
+          disabled={!tryAgainEnabled}
+          style={{
+            marginLeft: "10px",
+            padding: "8px 15px",
+            backgroundColor: tryAgainEnabled ? "#4caf50" : "#cccccc",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: tryAgainEnabled ? "pointer" : "not-allowed",
+            fontSize: "14px",
+            fontWeight: "bold",
+            opacity: tryAgainEnabled ? 1 : 0.6,
+          }}
+        >
+          Try Again
+        </button>
+      </div>
+      <Application
+        width={600}
+        height={400}
+        eventMode="static"
+        onClick={flipCoin}
+        style={{ outline: "none", cursor: "pointer" }}
+      >
+        <HandTossCoinChild
+          gameState={gameState}
+          coinRotation={coinRotation}
+          coinScale={coinScale}
+          coinY={coinY}
+          coinX={coinX}
+          isFlipping={isFlipping}
+          result={result}
+          score={score}
+          setGameState={setGameState}
+          setCoinRotation={setCoinRotation}
+          setCoinScale={setCoinScale}
+          setCoinY={setCoinY}
+          setCoinX={setCoinX}
+          setIsFlipping={setIsFlipping}
+          setResult={setResult}
+          setScore={setScore}
+          drawCoin={drawCoin}
+          drawBackground={drawBackground}
+          drawResultCoin={drawResultCoin}
+          handTexture={handTexture}
+          hand2Texture={hand2Texture}
+          hand3Texture={hand3Texture}
+          showCoin={showCoin}
+          hand2X={hand2X}
+          setHand2X={setHand2X}
+          hand2Moving={hand2Moving}
+          setHand2Moving={setHand2Moving}
+          showHand33={showHand33}
+          setShowHand33={setShowHand33}
+          setCoinResult={setCoinResult}
+          setShowResultEnabled={setShowResultEnabled}
+          setTryAgainEnabled={setTryAgainEnabled}
+          showResultEnabled={showResultEnabled}
+          tryAgainEnabled={tryAgainEnabled}
+          coinResult={coinResult}
+          slowFlipRotation={slowFlipRotation}
+          setSlowFlipRotation={setSlowFlipRotation}
+          setShowCoin={setShowCoin}
+        />
+      </Application>
+    </>
+  );
+};
+
+export default AdvancedHandTossCoinGame;

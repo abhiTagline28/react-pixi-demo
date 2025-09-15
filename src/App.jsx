@@ -20,6 +20,7 @@ import TossCoinGame from "./TossCoinGame";
 import BottomCoinToss from "./BottomCoinToss";
 import HorizontalCoinFlip from "./HorizontalCoinFlip";
 import HandTossCoinGame from "./HandTossCoinGame";
+import AdvancedHandTossCoinGame from "./AdvancedHandTossCoinGame";
 
 // Additional game examples
 // import TetrisGame from "./TetrisGame";
@@ -95,6 +96,9 @@ const App = () => {
       <br />
       <br />
       <HandTossCoinGame />
+      <br />
+      <br />
+      <AdvancedHandTossCoinGame />
 
       {/* <br />
       <br />
