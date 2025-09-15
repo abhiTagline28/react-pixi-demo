@@ -25,17 +25,27 @@ const HandTossCoinChild = ({
   drawResultCoin,
   handTexture,
   hand2Texture,
+  hand3Texture,
   showCoin,
   hand2X,
   setHand2X,
   hand2Moving,
   setHand2Moving,
+  showHand33,
+  setShowHand33,
+  setCoinResult,
+  setShowResultEnabled,
+  setTryAgainEnabled,
+  showResultEnabled,
+  tryAgainEnabled,
+  coinResult,
 }) => {
   const [flipCount, setFlipCount] = useState(0);
   // Debug logging
   useEffect(() => {
     console.log(`Hand22 state - X: ${hand2X}, Moving: ${hand2Moving}, Flipping: ${isFlipping}`);
-  }, [hand2X, hand2Moving, isFlipping]);
+    console.log(`Button states - Show Result: ${showResultEnabled}, Try Again: ${tryAgainEnabled}, Coin Result: ${coinResult}`);
+  }, [hand2X, hand2Moving, isFlipping, showResultEnabled, tryAgainEnabled, coinResult]);
 
   useTick(() => {
     // Handle hand22 movement to cover coin (only when not flipping)
@@ -78,9 +88,16 @@ const HandTossCoinChild = ({
         setCoinX(() => 300);
         setCoinRotation((prev) => prev + 0.1);
         setCoinScale(() => 1);
-      } else if (flipCount < 70) {
+      } else if (flipCount < 30) {
+        // Show hand33 (thumbs-up) for coin flipping
+        setShowHand33(true);
+        setCoinY(() => 250); // Stay on hand
+        setCoinX(() => 300);
+        setCoinRotation((prev) => prev + 0.1);
+        setCoinScale(() => 1);
+      } else if (flipCount < 80) {
         // Launch phase - coin goes from hand to top
-        const launchProgress = (flipCount - 20) / 50;
+        const launchProgress = (flipCount - 30) / 50;
         const easedProgress = easeOutQuad(launchProgress);
 
         setCoinY(() => {
@@ -114,6 +131,11 @@ const HandTossCoinChild = ({
         // Fall phase - coin falls back to hand
         const fallProgress = (flipCount - 120) / 50;
         const easedProgress = easeInQuad(fallProgress);
+
+        // Switch back to hand11 when coin starts falling
+        if (flipCount === 120) {
+          setShowHand33(false);
+        }
 
         setCoinY(() => {
           const startY = 60;
@@ -163,22 +185,18 @@ const HandTossCoinChild = ({
 
         // Determine result based on final rotation
         const finalRotation = coinRotation % (Math.PI * 2);
-        const coinResult = finalRotation < Math.PI ? "heads" : "tails";
-        setResult(coinResult);
+        const flipResult = finalRotation < Math.PI ? "heads" : "tails";
+        console.log("Flip completed, result:", flipResult);
+        
+        setCoinResult(flipResult); // Store result but don't show it yet
 
-        // Update score
-        setScore((prev) => prev + 1);
+        // Enable Show Result button and Try Again button
+        setShowResultEnabled(true);
+        setTryAgainEnabled(true);
+        console.log("Buttons enabled - Show Result:", true, "Try Again:", true);
 
-        // Show result for 3 seconds then reset
-        setTimeout(() => {
-          setResult(null);
-          setCoinRotation(0);
-          setCoinScale(1);
-          setCoinY(250);
-          setCoinX(300);
-          setHand2X(600); // Reset hand22 to off-screen position
-          setHand2Moving(false); // Reset movement state
-        }, 3000);
+        // Move hand22 to cover coin immediately after flip
+        setHand2X(300);
       }
     }
   });
@@ -186,9 +204,9 @@ const HandTossCoinChild = ({
   return (
     <>
       <pixiGraphics draw={drawBackground} />
-      {/* Always show hand11.png (hand with coin) */}
+      {/* Show hand11.png (hand with coin) or hand33.png (thumbs-up) */}
       <pixiSprite
-        texture={handTexture}
+        texture={showHand33 ? hand3Texture : handTexture}
         x={300}
         y={250}
         width={200}
@@ -204,7 +222,7 @@ const HandTossCoinChild = ({
         height={150}
         anchor={0.5}
       />
-      {/* Show coin only when hand22 is not covering it (hand2X > 320) and showCoin is true */}
+      {/* Show coin only when hand22 is not covering it (hand2X > 320) and showCoin is true and no result is showing */}
       {showCoin && hand2X > 320 && !result && (
         <pixiGraphics draw={drawCoin} />
       )}
@@ -244,9 +262,14 @@ const HandTossCoinGame = () => {
   const [tailsCount, setTailsCount] = useState(0);
   const [handTexture, setHandTexture] = useState(Texture.EMPTY);
   const [hand2Texture, setHand2Texture] = useState(Texture.EMPTY);
+  const [hand3Texture, setHand3Texture] = useState(Texture.EMPTY);
   const [showCoin, setShowCoin] = useState(true);
   const [hand2X, setHand2X] = useState(600); // Position of hand22 (starts off-screen, moves to 300 to cover)
   const [hand2Moving, setHand2Moving] = useState(false); // Track if hand22 is moving to cover
+  const [showHand33, setShowHand33] = useState(false); // Track if hand33 (thumbs-up) is visible
+  const [showResultEnabled, setShowResultEnabled] = useState(false); // Show Result button state
+  const [tryAgainEnabled, setTryAgainEnabled] = useState(false); // Try Again button state
+  const [coinResult, setCoinResult] = useState(null); // Store the flip result
 
   // Load hand textures
   useEffect(() => {
@@ -266,7 +289,15 @@ const HandTossCoinGame = () => {
         console.error("Failed to load hand22 image:", error);
       });
     }
-  }, [handTexture, hand2Texture]);
+    if (hand3Texture === Texture.EMPTY) {
+      Assets.load("/hand33.png").then((result) => {
+        console.log("Hand33.png loaded successfully");
+        setHand3Texture(result);
+      }).catch((error) => {
+        console.error("Failed to load hand33 image:", error);
+      });
+    }
+  }, [handTexture, hand2Texture, hand3Texture]);
 
   // Move hand22 to cover coin after 3 seconds
   useEffect(() => {
@@ -297,6 +328,53 @@ const HandTossCoinGame = () => {
     setHand2Moving(true);
   }, []);
 
+  // Show Result button function
+  const showResult = useCallback(() => {
+    if (!showResultEnabled || !coinResult) return;
+    
+    console.log("Show Result clicked, revealing coin with result:", coinResult);
+    
+    // Move hand22 back to reveal coin and show result
+    setHand2X(500);
+    setResult(coinResult);
+    
+    // Update score
+    setScore((prev) => prev + 1);
+    
+    // Disable Show Result button
+    setShowResultEnabled(false);
+    
+    // Keep result visible until Try Again is clicked
+    // No automatic timeout - result stays visible
+  }, [showResultEnabled, coinResult]);
+
+  // Try Again button function
+  const tryAgain = useCallback(() => {
+    if (!tryAgainEnabled) return;
+    
+    console.log("Try Again clicked, resetting for new flip");
+    
+    // Reset everything for a new flip
+    setResult(null);
+    setCoinRotation(0);
+    setCoinScale(1);
+    setCoinY(250);
+    setCoinX(300);
+    setCoinResult(null); // Clear stored result
+    setShowResultEnabled(false); // Disable Show Result button
+    setTryAgainEnabled(false); // Disable Try Again button
+    setShowHand33(false); // Reset hand33 visibility
+    
+    // Move hand22 to off-screen position
+    setHand2X(600);
+    setHand2Moving(false); // Reset movement state
+    
+    // Start hand22 movement to cover coin after 1 second
+    setTimeout(() => {
+      setHand2Moving(true);
+    }, 1000);
+  }, [tryAgainEnabled]);
+
   const resetGame = useCallback(() => {
     setScore(0);
     setHeadsCount(0);
@@ -310,6 +388,10 @@ const HandTossCoinGame = () => {
     setShowCoin(true); // Reset to show coin initially
     setHand2X(600); // Reset hand22 to off-screen position
     setHand2Moving(false); // Reset movement state
+    setShowHand33(false); // Reset hand33 visibility
+    setShowResultEnabled(false); // Reset Show Result button
+    setTryAgainEnabled(false); // Reset Try Again button
+    setCoinResult(null); // Clear stored result
   }, []);
 
   // Update heads/tails count when result changes
@@ -523,6 +605,42 @@ const HandTossCoinGame = () => {
         >
           Test Hand22
         </button>
+        <button
+          onClick={showResult}
+          disabled={!showResultEnabled}
+          style={{
+            marginLeft: "10px",
+            padding: "8px 15px",
+            backgroundColor: showResultEnabled ? "#2196f3" : "#cccccc",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: showResultEnabled ? "pointer" : "not-allowed",
+            fontSize: "14px",
+            fontWeight: "bold",
+            opacity: showResultEnabled ? 1 : 0.6,
+          }}
+        >
+          Show Result
+        </button>
+        <button
+          onClick={tryAgain}
+          disabled={!tryAgainEnabled}
+          style={{
+            marginLeft: "10px",
+            padding: "8px 15px",
+            backgroundColor: tryAgainEnabled ? "#4caf50" : "#cccccc",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: tryAgainEnabled ? "pointer" : "not-allowed",
+            fontSize: "14px",
+            fontWeight: "bold",
+            opacity: tryAgainEnabled ? 1 : 0.6,
+          }}
+        >
+          Try Again
+        </button>
       </div>
       <Application
         width={600}
@@ -553,11 +671,20 @@ const HandTossCoinGame = () => {
           drawResultCoin={drawResultCoin}
           handTexture={handTexture}
           hand2Texture={hand2Texture}
+          hand3Texture={hand3Texture}
           showCoin={showCoin}
           hand2X={hand2X}
           setHand2X={setHand2X}
           hand2Moving={hand2Moving}
           setHand2Moving={setHand2Moving}
+          showHand33={showHand33}
+          setShowHand33={setShowHand33}
+          setCoinResult={setCoinResult}
+          setShowResultEnabled={setShowResultEnabled}
+          setTryAgainEnabled={setTryAgainEnabled}
+          showResultEnabled={showResultEnabled}
+          tryAgainEnabled={tryAgainEnabled}
+          coinResult={coinResult}
         />
       </Application>
     </>
