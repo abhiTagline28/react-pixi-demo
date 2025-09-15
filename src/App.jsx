@@ -1,44 +1,45 @@
-import ApplicationAutoStart from "./ApplicationAutoStart";
-import { BunnySprite } from "./BunnySprite";
-import HelloWorldPixi from "./HelloWorldPixi";
-// import MakeAnimatedSpriteTextures from "./MakeAnimatedSpriteTextures";
-import MyGraphics from "./MyGraphics";
-import MyPixiGraphics from "./MyPixiGraphics";
-import RotateBunny from "./RotateBunny";
-import ScaleBunny from "./ScaleBunny";
-import ParticleSystem from "./ParticleSystem";
-import TextEffects from "./TextEffects";
-import PhysicsSimulation from "./PhysicsSimulation";
-import TilemapExample from "./TilemapExample";
-import CanvasDrawing from "./CanvasDrawing";
-import WebGLShaders from "./WebGLShaders";
+// import ApplicationAutoStart from "./ApplicationAutoStart";
+// import { BunnySprite } from "./BunnySprite";
+// import HelloWorldPixi from "./HelloWorldPixi";
+// // import MakeAnimatedSpriteTextures from "./MakeAnimatedSpriteTextures";
+// import MyGraphics from "./MyGraphics";
+// import MyPixiGraphics from "./MyPixiGraphics";
+// import RotateBunny from "./RotateBunny";
+// import ScaleBunny from "./ScaleBunny";
+// import ParticleSystem from "./ParticleSystem";
+// import TextEffects from "./TextEffects";
+// import PhysicsSimulation from "./PhysicsSimulation";
+// import TilemapExample from "./TilemapExample";
+// import CanvasDrawing from "./CanvasDrawing";
+// import WebGLShaders from "./WebGLShaders";
 
-// Game examples
-import SnakeGame from "./SnakeGame";
-import BreakoutGame from "./BreakoutGame";
+// // Game examples
+// import SnakeGame from "./SnakeGame";
+// import BreakoutGame from "./BreakoutGame";
 import TossCoinGame from "./TossCoinGame";
 import BottomCoinToss from "./BottomCoinToss";
 import HorizontalCoinFlip from "./HorizontalCoinFlip";
+import HandTossCoinGame from "./HandTossCoinGame";
 
 // Additional game examples
-import TetrisGame from "./TetrisGame";
-import SpaceInvaders from "./SpaceInvaders";
-import PongGame from "./PongGame";
-import MemoryGame from "./MemoryGame";
-import AsteroidsGame from "./AsteroidsGame";
-import CasinoGame from "./CasinoGame";
-import LoadingAnimations from "./LoadingAnimations";
-import RealisticAnimations from "./RealisticAnimations";
-import MoreRealisticExamples from "./MoreRealisticExamples";
-import FramerTextEffects from "./TextEffects";
-import BunnyCatchGame from "./BunnyCatchGame";
-import BunnyMazeGame from "./BunnyMazeGame";
-import BunnyMemoryGame from "./BunnyMemoryGame";
+// import TetrisGame from "./TetrisGame";
+// import SpaceInvaders from "./SpaceInvaders";
+// import PongGame from "./PongGame";
+// import MemoryGame from "./MemoryGame";
+// import AsteroidsGame from "./AsteroidsGame";
+// import CasinoGame from "./CasinoGame";
+// import LoadingAnimations from "./LoadingAnimations";
+// import RealisticAnimations from "./RealisticAnimations";
+// import MoreRealisticExamples from "./MoreRealisticExamples";
+// import FramerTextEffects from "./TextEffects";
+// import BunnyCatchGame from "./BunnyCatchGame";
+// import BunnyMazeGame from "./BunnyMazeGame";
+// import BunnyMemoryGame from "./BunnyMemoryGame";
 
 const App = () => {
   return (
     <>
-      <MyGraphics />
+      {/* <MyGraphics />
       <br />
       <br />
       <ApplicationAutoStart />
@@ -81,7 +82,7 @@ const App = () => {
       <SnakeGame />
       <br />
       <br />
-      <BreakoutGame />
+      <BreakoutGame /> */}
       <br />
       <br />
       <TossCoinGame />
@@ -91,9 +92,11 @@ const App = () => {
       <br />
       <br />
       <HorizontalCoinFlip />
-
-      {/* Additional Game Examples */}
       <br />
+      <br />
+      <HandTossCoinGame />
+
+      {/* <br />
       <br />
       <TetrisGame />
       <br />
@@ -131,7 +134,7 @@ const App = () => {
       <BunnyMazeGame />
       <br />
       <br />
-      <BunnyMemoryGame />
+      <BunnyMemoryGame /> */}
     </>
   );
 };
