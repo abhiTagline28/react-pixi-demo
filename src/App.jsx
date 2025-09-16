@@ -1,21 +1,21 @@
-// React PixiJS Documentation Demos
-import ApplicationDemo from "./ApplicationDemo";
-import PixiComponentsDemo from "./PixiComponentsDemo";
-import CustomComponentsDemo from "./CustomComponentsDemo";
-import HooksDemo from "./HooksDemo";
-import ExtendAPIDemo from "./ExtendAPIDemo";
+// // React PixiJS Documentation Demos
+// import ApplicationDemo from "./ApplicationDemo";
+// import PixiComponentsDemo from "./PixiComponentsDemo";
+// import CustomComponentsDemo from "./CustomComponentsDemo";
+// import HooksDemo from "./HooksDemo";
+// import ExtendAPIDemo from "./ExtendAPIDemo";
 
-// NEW EXAMPLES - 10 Different PixiJS Examples
-import InteractiveDataVisualization from "./InteractiveDataVisualization";
-import RealTimeDashboard from "./RealTimeDashboard";
-import InteractiveMap from "./InteractiveMap";
-import ProductShowcase from "./ProductShowcase";
-import InteractiveUIComponents from "./InteractiveUIComponents";
-import PhysicsSimulation from "./PhysicsSimulation";
-import WebGLShaders from "./WebGLShaders";
-import TilemapExample from "./TilemapExample";
-import CanvasDrawing from "./CanvasDrawing";
-import RealisticAnimations from "./RealisticAnimations";
+// // NEW EXAMPLES - 10 Different PixiJS Examples
+// import InteractiveDataVisualization from "./InteractiveDataVisualization";
+// import RealTimeDashboard from "./RealTimeDashboard";
+// import InteractiveMap from "./InteractiveMap";
+// import ProductShowcase from "./ProductShowcase";
+// import InteractiveUIComponents from "./InteractiveUIComponents";
+// import PhysicsSimulation from "./PhysicsSimulation";
+// import WebGLShaders from "./WebGLShaders";
+// import TilemapExample from "./TilemapExample";
+// import CanvasDrawing from "./CanvasDrawing";
+// import RealisticAnimations from "./RealisticAnimations";
 
 // Original examples (commented out for now)
 // import ApplicationAutoStart from "./ApplicationAutoStart";
@@ -36,12 +36,13 @@ import RealisticAnimations from "./RealisticAnimations";
 // Game examples
 // import SnakeGame from "./SnakeGame";
 // import BreakoutGame from "./BreakoutGame";
-// import TossCoinGame from "./TossCoinGame";
-// import BottomCoinToss from "./BottomCoinToss";
-// import HorizontalCoinFlip from "./HorizontalCoinFlip";
-// import HandTossCoinGame from "./HandTossCoinGame";
-// import AdvancedHandTossCoinGame from "./AdvancedHandTossCoinGame";
-// import AdvancedHandTossCoinWithStats from "./AdvancedHandTossCoinWithStats";
+import TossCoinGame from "./TossCoinGame";
+import BottomCoinToss from "./BottomCoinToss";
+import HorizontalCoinFlip from "./HorizontalCoinFlip";
+import HandTossCoinGame from "./HandTossCoinGame";
+import AdvancedHandTossCoinGame from "./AdvancedHandTossCoinGame";
+import AdvancedHandTossCoinWithStats from "./AdvancedHandTossCoinWithStats";
+import AdvancedGraphicsCoinGame from "./AdvancedGraphicsCoinGame";
 
 // Additional game examples
 // import TetrisGame from "./TetrisGame";
@@ -60,31 +61,40 @@ import RealisticAnimations from "./RealisticAnimations";
 
 const App = () => {
   return (
-    <div style={{ padding: '20px', backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
-      <h1 style={{ 
-        textAlign: 'center', 
-        color: '#2c3e50', 
-        marginBottom: '40px',
-        fontSize: '2.5rem',
-        fontWeight: 'bold'
-      }}>
+    <div
+    // style={{
+    //   padding: "20px",
+    //   backgroundColor: "#f8f9fa",
+    //   minHeight: "100vh",
+    // }}
+    >
+      {/* <h1
+        style={{
+          textAlign: "center",
+          color: "#2c3e50",
+          marginBottom: "40px",
+          fontSize: "2.5rem",
+          fontWeight: "bold",
+        }}
+      >
         React PixiJS Documentation Demos
       </h1>
-      
-      <div style={{ 
-        maxWidth: '1200px', 
-        margin: '0 auto',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '40px'
-      }}>
+
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "40px",
+        }}
+      >
         <ApplicationDemo />
         <PixiComponentsDemo />
         <CustomComponentsDemo />
         <HooksDemo />
         <ExtendAPIDemo />
-        
-        {/* NEW EXAMPLES - 10 Different PixiJS Examples */}
+
         <InteractiveDataVisualization />
         <RealTimeDashboard />
         <InteractiveMap />
@@ -95,10 +105,10 @@ const App = () => {
         <TilemapExample />
         <CanvasDrawing />
         <RealisticAnimations />
-      </div>
-      
+      </div> */}
+
       {/* Original examples (commented out for now) */}
-      {/* 
+      {/*
       <MyGraphics />
       <br />
       <br />
@@ -145,6 +155,8 @@ const App = () => {
       <BreakoutGame />
       <br />
       <br />
+      */}
+
       <TossCoinGame />
       <br />
       <br />
@@ -161,7 +173,10 @@ const App = () => {
       <br />
       <br />
       <AdvancedHandTossCoinWithStats />
-
+      <br />
+      <br />
+      <AdvancedGraphicsCoinGame />
+      {/*
       <br />
       <br />
       <TetrisGame />
