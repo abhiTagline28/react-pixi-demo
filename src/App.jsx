@@ -1,7 +1,27 @@
+// React PixiJS Documentation Demos
+import ApplicationDemo from "./ApplicationDemo";
+import PixiComponentsDemo from "./PixiComponentsDemo";
+import CustomComponentsDemo from "./CustomComponentsDemo";
+import HooksDemo from "./HooksDemo";
+import ExtendAPIDemo from "./ExtendAPIDemo";
+
+// NEW EXAMPLES - 10 Different PixiJS Examples
+import InteractiveDataVisualization from "./InteractiveDataVisualization";
+import RealTimeDashboard from "./RealTimeDashboard";
+import InteractiveMap from "./InteractiveMap";
+import ProductShowcase from "./ProductShowcase";
+import InteractiveUIComponents from "./InteractiveUIComponents";
+import PhysicsSimulation from "./PhysicsSimulation";
+import WebGLShaders from "./WebGLShaders";
+import TilemapExample from "./TilemapExample";
+import CanvasDrawing from "./CanvasDrawing";
+import RealisticAnimations from "./RealisticAnimations";
+
+// Original examples (commented out for now)
 // import ApplicationAutoStart from "./ApplicationAutoStart";
 // import { BunnySprite } from "./BunnySprite";
 // import HelloWorldPixi from "./HelloWorldPixi";
-// // import MakeAnimatedSpriteTextures from "./MakeAnimatedSpriteTextures";
+// import MakeAnimatedSpriteTextures from "./MakeAnimatedSpriteTextures";
 // import MyGraphics from "./MyGraphics";
 // import MyPixiGraphics from "./MyPixiGraphics";
 // import RotateBunny from "./RotateBunny";
@@ -13,15 +33,15 @@
 // import CanvasDrawing from "./CanvasDrawing";
 // import WebGLShaders from "./WebGLShaders";
 
-// // Game examples
+// Game examples
 // import SnakeGame from "./SnakeGame";
 // import BreakoutGame from "./BreakoutGame";
-import TossCoinGame from "./TossCoinGame";
-import BottomCoinToss from "./BottomCoinToss";
-import HorizontalCoinFlip from "./HorizontalCoinFlip";
-import HandTossCoinGame from "./HandTossCoinGame";
-import AdvancedHandTossCoinGame from "./AdvancedHandTossCoinGame";
-import AdvancedHandTossCoinWithStats from "./AdvancedHandTossCoinWithStats";
+// import TossCoinGame from "./TossCoinGame";
+// import BottomCoinToss from "./BottomCoinToss";
+// import HorizontalCoinFlip from "./HorizontalCoinFlip";
+// import HandTossCoinGame from "./HandTossCoinGame";
+// import AdvancedHandTossCoinGame from "./AdvancedHandTossCoinGame";
+// import AdvancedHandTossCoinWithStats from "./AdvancedHandTossCoinWithStats";
 
 // Additional game examples
 // import TetrisGame from "./TetrisGame";
@@ -40,8 +60,46 @@ import AdvancedHandTossCoinWithStats from "./AdvancedHandTossCoinWithStats";
 
 const App = () => {
   return (
-    <>
-      {/* <MyGraphics />
+    <div style={{ padding: '20px', backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+      <h1 style={{ 
+        textAlign: 'center', 
+        color: '#2c3e50', 
+        marginBottom: '40px',
+        fontSize: '2.5rem',
+        fontWeight: 'bold'
+      }}>
+        React PixiJS Documentation Demos
+      </h1>
+      
+      <div style={{ 
+        maxWidth: '1200px', 
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '40px'
+      }}>
+        <ApplicationDemo />
+        <PixiComponentsDemo />
+        <CustomComponentsDemo />
+        <HooksDemo />
+        <ExtendAPIDemo />
+        
+        {/* NEW EXAMPLES - 10 Different PixiJS Examples */}
+        <InteractiveDataVisualization />
+        <RealTimeDashboard />
+        <InteractiveMap />
+        <ProductShowcase />
+        <InteractiveUIComponents />
+        <PhysicsSimulation />
+        <WebGLShaders />
+        <TilemapExample />
+        <CanvasDrawing />
+        <RealisticAnimations />
+      </div>
+      
+      {/* Original examples (commented out for now) */}
+      {/* 
+      <MyGraphics />
       <br />
       <br />
       <ApplicationAutoStart />
@@ -84,7 +142,7 @@ const App = () => {
       <SnakeGame />
       <br />
       <br />
-      <BreakoutGame /> */}
+      <BreakoutGame />
       <br />
       <br />
       <TossCoinGame />
@@ -104,7 +162,7 @@ const App = () => {
       <br />
       <AdvancedHandTossCoinWithStats />
 
-      {/* <br />
+      <br />
       <br />
       <TetrisGame />
       <br />
@@ -142,8 +200,9 @@ const App = () => {
       <BunnyMazeGame />
       <br />
       <br />
-      <BunnyMemoryGame /> */}
-    </>
+      <BunnyMemoryGame />
+      */}
+    </div>
   );
 };
 
