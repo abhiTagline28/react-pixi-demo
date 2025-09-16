@@ -36,13 +36,14 @@
 // Game examples
 // import SnakeGame from "./SnakeGame";
 // import BreakoutGame from "./BreakoutGame";
-import TossCoinGame from "./TossCoinGame";
-import BottomCoinToss from "./BottomCoinToss";
-import HorizontalCoinFlip from "./HorizontalCoinFlip";
-import HandTossCoinGame from "./HandTossCoinGame";
-import AdvancedHandTossCoinGame from "./AdvancedHandTossCoinGame";
+// import TossCoinGame from "./TossCoinGame";
+// import BottomCoinToss from "./BottomCoinToss";
+// import HorizontalCoinFlip from "./HorizontalCoinFlip";
+// import HandTossCoinGame from "./HandTossCoinGame";
+// import AdvancedHandTossCoinGame from "./AdvancedHandTossCoinGame";
 import AdvancedHandTossCoinWithStats from "./AdvancedHandTossCoinWithStats";
 import AdvancedGraphicsCoinGame from "./AdvancedGraphicsCoinGame";
+import AdvancedModernStylizedHandGraphicsCoinGame from "./AdvancedModernStylizedHandGraphicsCoinGame";
 
 // Additional game examples
 // import TetrisGame from "./TetrisGame";
@@ -157,7 +158,7 @@ const App = () => {
       <br />
       */}
 
-      <TossCoinGame />
+      {/* <TossCoinGame />
       <br />
       <br />
       <BottomCoinToss />
@@ -169,13 +170,16 @@ const App = () => {
       <HandTossCoinGame />
       <br />
       <br />
-      <AdvancedHandTossCoinGame />
+      <AdvancedHandTossCoinGame /> */}
       <br />
       <br />
       <AdvancedHandTossCoinWithStats />
       <br />
       <br />
       <AdvancedGraphicsCoinGame />
+      <br />
+      <br />
+      <AdvancedModernStylizedHandGraphicsCoinGame />
       {/*
       <br />
       <br />
